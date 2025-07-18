@@ -1,0 +1,313 @@
+https://chatgpt.com/share/68799004-8b50-8007-912e-63e6bf9ff944
+
+
+🧪EXPERIMENT NO: 1
+
+💡Aim:
+
+To download and install Hadoop 3.4.1 on Windows, understand its different modes (Standalone, Pseudo-Distributed), startup scripts, and configuration files.
+
+
+---
+
+🖥️System Requirements:
+
+Windows 10/11 (64-bit)
+
+Java JDK 11+
+
+Hadoop 3.4.1 (Binary)
+
+WinRAR/7-Zip (for extraction)
+
+Git Bash or Command Prompt
+
+
+
+---
+
+🔧Software Installation & Setup Steps:
+
+✅ 1. Install Java
+
+Download Java JDK 11 or newer:
+https://www.oracle.com/java/technologies/javase-jdk11-downloads.html
+
+Install and set environment variable:
+
+JAVA_HOME = C:\Program Files\Java\jdk-11.x.x
+
+Add %JAVA_HOME%\bin to Path
+
+
+
+Check in Command Prompt:
+
+java -version
+
+
+---
+
+✅ 2. Download and Extract Hadoop 3.4.1
+
+Download: https://downloads.apache.org/hadoop/common/hadoop-3.4.1/
+
+Extract to C:\hadoop
+
+
+
+---
+
+✅ 3. Install Winutils.exe
+
+Hadoop needs winutils.exe for Windows. Download from: https://github.com/cdarlint/winutils
+
+Place winutils.exe in:
+
+C:\hadoop\bin
+
+
+
+---
+
+✅ 4. Set Environment Variables
+
+Go to System Properties → Advanced → Environment Variables, and add:
+
+Variable	Value
+
+HADOOP_HOME	C:\hadoop
+JAVA_HOME	C:\Program Files\Java\jdk-11.x.x
+Add to Path	%JAVA_HOME%\bin;%HADOOP_HOME%\bin
+
+
+
+---
+
+✅ 5. Configure Hadoop Files
+
+Navigate to:
+C:\hadoop\etc\hadoop
+
+Edit hadoop-env.cmd
+
+Set:
+
+set JAVA_HOME=C:\Program Files\Java\jdk-11.x.x
+
+Edit core-site.xml
+
+<configuration>
+  <property>
+    <name>fs.defaultFS</name>
+    <value>hdfs://localhost:9000</value>
+  </property>
+</configuration>
+
+Edit hdfs-site.xml
+
+<configuration>
+  <property>
+    <name>dfs.replication</name>
+    <value>1</value>
+  </property>
+  <property>
+    <name>dfs.namenode.name.dir</name>
+    <value>file:///C:/hadoop_data/hdfs/namenode</value>
+  </property>
+  <property>
+    <name>dfs.datanode.data.dir</name>
+    <value>file:///C:/hadoop_data/hdfs/datanode</value>
+  </property>
+</configuration>
+
+Edit mapred-site.xml (first rename .template)
+
+Rename:
+
+copy mapred-site.xml.template mapred-site.xml
+
+<configuration>
+  <property>
+    <name>mapreduce.framework.name</name>
+    <value>yarn</value>
+  </property>
+</configuration>
+
+Edit yarn-site.xml
+
+<configuration>
+  <property>
+    <name>yarn.nodemanager.aux-services</name>
+    <value>mapreduce_shuffle</value>
+  </property>
+</configuration>
+
+
+---
+
+⚙️Running Hadoop
+
+1. Format NameNode
+
+hdfs namenode -format
+
+2. Start Hadoop Daemons
+
+start-dfs.cmd
+start-yarn.cmd
+
+3. Check Java Processes
+
+jps
+
+Expected output:
+
+NameNode
+DataNode
+ResourceManager
+NodeManager
+
+
+---
+
+🌐Access Web Interfaces
+
+NameNode: http://localhost:9870
+
+ResourceManager: http://localhost:8088
+
+
+
+---
+
+📝Observation:
+
+Hadoop runs in pseudo-distributed mode on Windows.
+
+Configuration files like core-site.xml, hdfs-site.xml, etc., are used to manage settings.
+
+
+
+---
+
+✅Result:
+
+Hadoop 3.4.1 was successfully installed and configured in Pseudo-Distributed Mode on Windows. Configuration files and startup scripts were edited and understood.
+
+
+---
+
+Let me know if you'd like the Experiment 2 (HDFS file operations on Windows CLI).
+
+
+🧪EXPERIMENT NO: 2
+
+💡Aim:
+
+To perform basic file management tasks in Hadoop Distributed File System (HDFS) using command-line interface on Windows:
+
+Add files and directories
+
+Retrieve (read) files
+
+Delete files and directories
+
+
+
+---
+
+🖥️Prerequisite:
+
+Hadoop 3.4.1 already installed and running in Pseudo-Distributed Mode
+
+HDFS services are started via:
+
+
+start-dfs.cmd
+
+
+---
+
+🔧HDFS File Commands and Examples
+
+✅ 1. Create a Directory in HDFS
+
+hdfs dfs -mkdir /user
+hdfs dfs -mkdir /user/hadoopuser
+
+Or combine:
+
+hdfs dfs -mkdir -p /user/hadoopuser
+
+📝 Creates a folder /user/hadoopuser in HDFS
+
+
+---
+
+✅ 2. Put (Upload) a File into HDFS
+
+Create a local sample file:
+
+echo Hello Hadoop! > C:\sample.txt
+
+Upload it:
+
+hdfs dfs -put C:\sample.txt /user/hadoopuser/
+
+
+---
+
+✅ 3. List Files in HDFS
+
+hdfs dfs -ls /user/hadoopuser
+
+
+---
+
+✅ 4. View File Contents
+
+hdfs dfs -cat /user/hadoopuser/sample.txt
+
+
+---
+
+✅ 5. Download File from HDFS to Local
+
+hdfs dfs -get /user/hadoopuser/sample.txt C:\HDFSDownloads\
+
+📝 Creates HDFSDownloads folder locally (create it manually if needed).
+
+
+---
+
+✅ 6. Delete a File from HDFS
+
+hdfs dfs -rm /user/hadoopuser/sample.txt
+
+
+---
+
+✅ 7. Delete Directory from HDFS
+
+hdfs dfs -rm -r /user/hadoopuser
+
+
+---
+
+📝Observation:
+
+Successfully performed upload, read, and delete operations using HDFS shell commands.
+
+Understood the HDFS path structure and permission handling.
+
+
+
+---
+
+✅Result:
+
+Basic file management commands were executed successfully in HDFS using Hadoop 3.4.1 on Windows, validating the distributed file system's operational features.
+
+
+
